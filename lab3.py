@@ -296,3 +296,73 @@ print([m["name"] for m in movies_by_category(movies, "Romance")])
 print(average_imdb(movies))
 
 print(average_imdb_by_category(movies, "Romance"))
+
+
+
+
+
+
+
+class MyString:
+    def GetString(self):
+        self.string = input()
+
+    def printString(self):
+        print(self.string.upper())
+smth = MyString()
+smth.GetString()
+smth.printString()
+
+
+class Shape:
+    def area(self):
+        print(0)
+class Square(Shape):
+    def __innit__(self, length):
+        self.length = length
+    def area(self):
+        print(self.length**2)
+shape = Shape()
+shape.area()
+square = Square(5)
+square.area()
+
+
+class Rectangle(Shape):
+    def __innit__(self, length, width):
+        self.length = length
+        self.width = width 
+    def area(self):
+        print(self.length * self.width)
+shape = Shape()
+shape.area()
+rectangle = Rectangle(4, 6)
+rectangle.area()
+
+
+import math
+class Point:
+    def __innit__(self, x, y):
+        self.x = x
+        self.y = y
+        
+    def show(self):
+        print(f'X is {self.x}, y is {self.y}')
+    def move(self, x, y):
+        self.x = x
+        self.y = y
+    def dist(self, other):
+        print(math.sqrt(self.x - other.x)**2 + (self.y - other.y)**2 )
+
+x1= float(input())
+y1 = float(input())
+x2 = float(input())
+y2 =float(input())
+
+p1 = (x1, y1)
+p2 = (x2, y2)
+p1 = Point()
+p1.show()
+p1.dist(p2)
+
+
