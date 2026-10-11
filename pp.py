@@ -1,10 +1,13 @@
-def print_permutations(s):
-    perms = [''.join(p) for p in itertools.permutations(s)]
-    print("\n".join(perms))
+import re
+text = 'sldjkh #jfghfskh #daskfj'
+result = re.findall(r"#" \
+"w+", text)
+print(result)
 
-def solve(numlegs, numheads):
-    for rabbits in numheads+1:
-        chickens = numheads - rabbits
-    if 2* chickens + 4 * rabbits == numlegs:
-        return chickens, rabbits 
-    return None, None
+
+import datetime
+
+today = 5-11-2026
+date2ago = today - 2
+date2after = today + 2
+print(date2ago, today, date2after)
