@@ -1,4 +1,4 @@
--- 2. Procedure to insert a new user by name and phone; if the user already exists, update their phone
+-- 2. Insert new contact or update phone if user exists
 CREATE OR REPLACE PROCEDURE upsert_contact(p_name VARCHAR, p_phone VARCHAR)
 LANGUAGE plpgsql AS $$
 BEGIN
@@ -11,8 +11,7 @@ END;
 $$;
 
 
--- 3. Procedure to insert many new users from a list of names and phones
---    Uses a loop and IF inside the procedure, validates phone correctness, and returns all incorrect data
+-- 3. Insert many contacts with phone validation
 CREATE OR REPLACE PROCEDURE insert_many_contacts(
     IN p_names VARCHAR[],
     IN p_phones VARCHAR[],
@@ -23,15 +22,12 @@ DECLARE
     i INT;
 BEGIN
     invalid_data := '{}';
-    FOR i IN 1 .. COALESCE(array_length(p_names, 1), 0) LOOP
-        -- Validate phone: optional '+' followed by 10 to 15 digits
+    FOR i IN 1..array_length(p_names, 1) LOOP
         IF p_phones[i] ~ '^\+?[0-9]{10,15}$' THEN
             IF EXISTS (SELECT 1 FROM phonebook WHERE first_name = p_names[i]) THEN
                 UPDATE phonebook SET phone = p_phones[i] WHERE first_name = p_names[i];
             ELSE
-                INSERT INTO phonebook(first_name, phone)
-                VALUES (p_names[i], p_phones[i])
-                ON CONFLICT (phone) DO NOTHING;
+                INSERT INTO phonebook(first_name, phone) VALUES (p_names[i], p_phones[i]);
             END IF;
         ELSE
             invalid_data := array_append(invalid_data, p_names[i] || ': ' || p_phones[i]);
@@ -41,7 +37,7 @@ END;
 $$;
 
 
--- 5. Procedure to delete data from the table by username or phone
+-- 5. Delete contact by name or phone
 CREATE OR REPLACE PROCEDURE delete_contact(p_value VARCHAR)
 LANGUAGE plpgsql AS $$
 BEGIN

@@ -1,25 +1,24 @@
--- 1. Function that returns all records matching a pattern (part of name or phone number)
-CREATE OR REPLACE FUNCTION get_contacts_by_pattern(p_pattern TEXT)
+-- 1. Search contacts by pattern
+CREATE OR REPLACE FUNCTION get_contacts_by_pattern(p TEXT)
 RETURNS TABLE(id INT, first_name VARCHAR, phone VARCHAR) AS $$
 BEGIN
     RETURN QUERY
-    SELECT pb.id, pb.first_name, pb.phone
-    FROM phonebook pb
-    WHERE pb.first_name ILIKE '%' || p_pattern || '%'
-       OR pb.phone ILIKE '%' || p_pattern || '%'
-    ORDER BY pb.id;
+    SELECT phonebook.id, phonebook.first_name, phonebook.phone
+    FROM phonebook
+    WHERE phonebook.first_name ILIKE '%' || p || '%'
+       OR phonebook.phone ILIKE '%' || p || '%';
 END;
 $$ LANGUAGE plpgsql;
 
 
--- 4. Function that queries data from the table with pagination (by LIMIT and OFFSET)
+-- 4. Get contacts with pagination
 CREATE OR REPLACE FUNCTION get_contacts_paginated(p_limit INT, p_offset INT)
 RETURNS TABLE(id INT, first_name VARCHAR, phone VARCHAR) AS $$
 BEGIN
     RETURN QUERY
-    SELECT pb.id, pb.first_name, pb.phone
-    FROM phonebook pb
-    ORDER BY pb.id
+    SELECT phonebook.id, phonebook.first_name, phonebook.phone
+    FROM phonebook
+    ORDER BY phonebook.id
     LIMIT p_limit OFFSET p_offset;
 END;
 $$ LANGUAGE plpgsql;
